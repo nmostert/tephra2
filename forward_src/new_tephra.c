@@ -25,8 +25,16 @@ along with tephra2.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <gc.h>
 #include "../common_src/prototypes.h"
+
+#if defined(GC)
+#include <gc.h>
+#endif
+
+#if defined(_WIN32) || defined(_WIN64)
+/* We are on Windows, modify strtok */
+# define strtok_r strtok_s
+#endif
 
 /* The following Global Variables are assigned some default values 
 

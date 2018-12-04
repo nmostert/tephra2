@@ -3,6 +3,18 @@
 #include "parameters.h"
 #include "common_structures.h"
 
+#if !defined(_WIN32) || !defined(_WIN64)
+/* We are not on Windows */
+void optimize_params(double [][NUM_OF_PARAMS], double [], double, double (*funk)(double []), int *);
+void init_optimal_params(double[][NUM_OF_PARAMS]);
+#endif
+
+#if !defined(GC)
+/* We are not using GC, convert to c standard mallocs*/
+#define GC_MALLOC(x) malloc(x)
+#define GC_REALLOC(p, x) realloc(p,x)
+#endif
+
 void optimize_params(double [][NUM_OF_PARAMS], double [], double, double (*funk)(double []), int *);
 double minimizing_func(double []);
 void test_bounds(int, double *, double);

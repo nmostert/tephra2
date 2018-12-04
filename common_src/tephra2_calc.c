@@ -4,9 +4,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <gc.h>
 #include "prototypes.h"
 
+#if defined(GC)
+#include <gc.h>
+#endif
 
 static double PLUME_THRESHOLD;
 static double AIR_VISCOSITY_x_18;

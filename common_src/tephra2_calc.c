@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <io.h> //<unistd.h>
 #include "prototypes.h"
 
 #if defined(GC)

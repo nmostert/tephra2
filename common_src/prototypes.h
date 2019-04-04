@@ -15,10 +15,8 @@ void init_optimal_params(double[][NUM_OF_PARAMS]);
 #define GC_REALLOC(p, x) realloc(p,x)
 #endif
 
-void optimize_params(double [][NUM_OF_PARAMS], double [], double, double (*funk)(double []), int *);
 double minimizing_func(double []);
 void test_bounds(int, double *, double);
-void init_optimal_params( double [][NUM_OF_PARAMS]);
 void assign_new_params( double []);
 int init_globals(char *);
 void set_global_values(FILE *);

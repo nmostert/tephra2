@@ -24,7 +24,7 @@ along with tephra2.  If not, see <http://www.gnu.org/licenses/>.
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <io.h> //<unistd.h>
 #include "../common_src/prototypes.h"
 
 #if defined(GC)

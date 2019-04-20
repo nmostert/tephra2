@@ -23,6 +23,7 @@ static double TWO_x_PART_SIGMA_SIZE;
 static TABLE **T;
 static FILE *log_file;
 static FILE *gsd_file;
+static FILE *mass_file;
 
 /*
 tephra2
@@ -706,22 +707,33 @@ printf(log_file, "PART_STEPS=%d\n", PART_STEPS);
           gsd_file, strerror(errno));
       exit(1);
     }
-    fprintf(gsd_file, "Index, Y, Prob, Cumulative\n");
+    fprintf(gsd_file, "Index,Y,Prob,Cumulative\n");
     y = (erupt)->min_phi;
     for (i=0; i < PART_STEPS; i++) {
         prob = pdf_grainsize(erupt->mean_phi, y, part_step_width);
         cum_prob_part += prob;
+        fprintf(gsd_file, "%d,%f,%f,%f\n", i, y, prob, cum_prob_part);
         y += part_step_width;
-        fprintf(gsd_file, "%d, %f, %f, %f\n", i, y, prob, cum_prob_part);
     }
     fclose(gsd_file);
 
     total_P_part = cum_prob_part;
 
+
+
     /* Normalization constant */
     total_P = (total_P_col * total_P_part);
     /*fprintf(log_file, "Total_PC=%g  Total_P=%g  Total_C=%g\n",total_P, total_P_col, total_P_part);*/
 /************************End of normalization steps  ******************************************/
+
+    mass_file = fopen("mass_initialisation.csv", "w+");
+    if (mass_file == NULL) {
+      fprintf(stderr, "Cannot open mass file=[mass_initialisation.csv]:[%s] Exiting.\n", strerror(errno));
+      exit(1);
+    }
+
+    fprintf(mass_file,
+  "gs_step,col_step,particle_ht,ashdiam,part_density,fall_time,plume_diffusion_fine_particle,plume_diffusion_coarse_particle,total_fall_time,wind_sum_x,wind_sum_y,actual_mass\n");
 
     /* Dynamically allocated table for storing integration data.
      Used in the double integration steps below for each point considered.
@@ -849,9 +861,9 @@ printf(log_file, "PART_STEPS=%d\n", PART_STEPS);
             }*/
 
             T[i][j].particle_ht = x;
-/*
-            fprintf(log_file,
-	      "[%d][%d]%g %g %g %g %g %g %g %g %g %g\n",
+
+            fprintf(mass_file,
+	      "%d,%d,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f\n",
 	      i,j,
 	      T[i][j].particle_ht,
 	      T[i][j].ashdiam,
@@ -863,13 +875,13 @@ printf(log_file, "PART_STEPS=%d\n", PART_STEPS);
 	      T[i][j].wind_sum_x,
 	      T[i][j].wind_sum_y,
 	      T[i][j].demon1);
-*/
+
         } /* END COL_STEPS_LOOP */
 
         y += part_step_width;   /* moved from beg of loop 2-22-2011 */
 
     } /* END PART_STEPS_LOOP */
-
+    fclose(mass_file);
 	/*fprintf(log_file, "MIN particle fall time = %.0f\n", pmin);
 	fprintf(log_file, "MAX particle fall time = %.0f\n", pmax);
 */

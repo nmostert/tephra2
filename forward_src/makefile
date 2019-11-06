@@ -11,7 +11,7 @@ else ifeq ($(UNAME),Linux)
                 LIB=../lib32
         endif
 else
-	UNAME := $(shell uname -o) 
+	UNAME := $(shell uname -o)
 	ifeq ($(UNAME), Cygwin)
 		CC=`which gcc`
 		ifeq ($(LBITS),64)
@@ -26,7 +26,7 @@ all:	tephra2-2012
 		mv tephra2-2012 ../tephra2-2012
 
 tephra2-2012:	new_tephra.o ../common_src/parameters.h tephra2_calc.o
-		$(CC) -no-pie -Wall -O3 -idirafter ../include -o tephra2-2012 new_tephra.o tephra2_calc.o -lm $(LIB)/libgc.a -ldl
+		$(CC) -no-pie -Wall -O3 -idirafter ../include -o tephra2-2012 new_tephra.o tephra2_calc.o -lm ../libcygwin64/libgc.a -ldl
 
 new_tephra.o:	new_tephra.c ../common_src/common_structures.h makefile
 		$(CC) -no-pie -Wall -O3 -idirafter ../include -c new_tephra.c

@@ -20,6 +20,7 @@ static double BETA_x_SQRT_TWO_PI;
 static double TWO_BETA_SQRD;
 static double PDF_GRAINSIZE_DEMON1;
 static double TWO_x_PART_SIGMA_SIZE;
+static double COL_FLAG;
 static TABLE **T;
 static FILE *log_file;
 static FILE *gsd_file;
@@ -219,10 +220,13 @@ void tephra_calc(ERUPTION *erupt, POINT *pt, WIND *day, STATS *stats) { /* tephr
 			 ash_fall = (T[i][j].demon1 / demon2) * demon3;
 			 pt->calculated_mass += ash_fall;
 			 pt->calculated_phi[i] += ash_fall;
+       if (pt->northing == 0) {
+          fprintf(log_file, "%g, %d, %g, %g, %g, %g, %g\n", pt->easting, j, average_windspeed, ash_fall, sigma, demon3, total_fall_time);
+       }
 		}  /* COL_STEPS_LOOP */
    #ifdef _PRINT
 fprintf(log_file, "bin[%g] mass[%g] part[%g]", pt->calculated_phi[i], pt->calculated_mass, ash_fall);
-			fprintf(log_file, "\n");
+
 
 
   #endif
@@ -232,7 +236,6 @@ fprintf(log_file, "bin[%g] mass[%g] part[%g]", pt->calculated_phi[i], pt->calcul
 #ifdef _PRINT
   fprintf(log_file, "OUT\n");
 #endif
-
   stats->min_falltime = min;
   stats->max_falltime = max;
 }
@@ -367,7 +370,10 @@ double part_fall_time(double particle_ht, double layer, double ashdiam, double p
 /* particle fall time is in sec   */
 
   //printf("i= %d, layer = %f, hz = %f, particle_term_vel = %f, diam=%f, reynolds = %f\n", i,layer_thickness, hz, particle_term_vel, a//shdiam, reynolds_number);
-
+  if (COL_FLAG > 0) {
+      fprintf(log_file, "%g, %g, %g, %g, %g, %g", particle_ht, layer, ashdiam, part_density, particle_term_vel, particle_fall_time);
+      fprintf(log_file, "\n");
+  }
   return particle_fall_time;
 }
 
@@ -681,7 +687,7 @@ printf(log_file, "PART_STEPS=%d\n", PART_STEPS);
     AIR_VISCOSITY_x_225 = AIR_VISCOSITY * 225.0;
     GRAV_SQRD_x_4 = 4.0 * GRAVITY * GRAVITY;
      T = NULL;
-
+    COL_FLAG = 1;
     /*define the limits of integration */
     part_section_width = erupt->max_phi - erupt->min_phi;
     part_step_width = part_section_width / (double)PART_STEPS;

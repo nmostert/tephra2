@@ -32,7 +32,7 @@ tephra2012_inversion:		master.o slave.o ameoba.o tephra_inversion.o minimizing_f
 		fit_tests.o -lm\
 		minimizing_func.o -lm\
 		tephra_inversion.o\
-		tephra2_calc.o $(LIB)/libgc.a -ldl
+		tephra2_calc.o ../libcygwin64/libgc.a -ldl
 
 master.o:		master.c ../common_src/parameters.h makefile
 			$(CC) -no-pie -Wall  -O3 -idirafter ../include -c master.c
@@ -45,8 +45,8 @@ ameoba.o:		ameoba.c ../common_src/parameters.h makefile
 
 fit_tests.o:		fit_tests.c ../common_src/common_structures.h makefile
 			$(CC) -no-pie -Wall -idirafter ../include -c fit_tests.c
-			
-minimizing_func.o:	minimizing_func.c ../common_src/common_structures.h makefile 
+
+minimizing_func.o:	minimizing_func.c ../common_src/common_structures.h makefile
 			$(CC) -no-pie -Wall -idirafter ../include -c minimizing_func.c
 
 tephra2_calc.o:	../common_src/tephra2_calc.c ../common_src/common_structures.h makefile
